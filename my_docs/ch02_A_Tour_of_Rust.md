@@ -81,3 +81,40 @@ for m in &numbers[1..]{
 - Rustではmainが何も返さなければプログラムが成功したことになる
 - expectやstd::process::exitなどの関数を明示的に呼び出した場合のみ、プログラムはエラーを表す0以外のステータスコードを返す
 
+## 2.5 Webページを公開する
+### Cargo.tomlに追加
+```
+[dependencies]
+actix-web = " 1 . 0 . 8 "
+serde = { version = " 1 . 0 ", features = ["derive"] }
+```
+- Webフレームワークであるactix-webとシリアライズを行うserdeを導入する
+- actix-webとは
+  - actixとは、Rust製のActorフレームワーク（Java/Scalaでいうと、Akkaがメジャー）
+  - actixをベースとしてWeb開発用機能を追加したのが、軽量・高速なWeb開発フレームワークである**actix-web**
+  - actix-webで開発されたアプリは、実行ファイルにHTTPサーバーを含んでいるため、そのまま使うこともできるし、apacheやnginxの後ろに置くこともできる
+
+### main.rs
+
+```
+use actix_web::{web, App, HttpResponse, HttpServer};
+```
+- actix_wweb::{...}のように書くと波括弧の中に書いた名前を、コードの中で直接使えるようになる
+次のと同様。
+```
+use actix_web::web;
+use actix_web::App;
+use actix_web::HttpResponse;
+use actix_web::HttpServer;
+```
+
+- main関数のやっていること
+  - HttpServer::newを呼び出して、パス"/"へのリクエストに対応するサーバーを作り、そこに接続するように促すメッセージを出力し、ローカルマシンのTCPポート3000番をリッスンする
+
+- HttpServer::newの引数として渡しているものは、Rustのクロージャ式
+  - || {App::new()...}という形をしている
+  - クロージャが引数を取る場合は||の間に記述する
+  -{...}の部分がクロージャのボディ部
+  
+以降下記のGoogleスライド
+https://docs.google.com/presentation/d/14G7SZe_OYps0XXF68NumTnJ8tPF_v_29at1PJxesxU8/edit#slide=id.p
